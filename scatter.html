@@ -9,7 +9,6 @@
       h2 { color: #95c8ff; margin-left: 10vw; }
       #myplot { box-shadow: 0 4px 16px #0006; border-radius: 14px; }
       #stats { margin-left: 10vw; margin-bottom: 16px; }
-      /* 可选: 更紧凑布局 */
     </style>
 </head>
 <body>
@@ -17,7 +16,6 @@
   <div id="stats"></div>
   <div id="myplot" style="width:90vw; height:70vh; margin:auto;"></div>
   <script>
-    // 自动根据差值分组
     function classifyDelta(exp, pred) {
       const d = Math.abs(exp - pred);
       if (d === 0) return 'Exact';
@@ -25,35 +23,32 @@
       if (d <= 2) return 'Within';
       return 'Miss';
     }
-
     const COLORS = {
       "Exact": "#8aceff",
       "Adjacent": "#77e89b",
       "Within": "#ffae54",
       "Miss": "#ec5659"
     };
-    const MARKER_SIZE = 13, MARKER_LINE_WIDTH = 1.5;
+    const MARKER_SIZE = 13, HOVER_SIZE = 22, MARKER_LINE_WIDTH = 1.5;
 
     fetch('estdan_scatter.json')
       .then(res=>res.json())
       .then(data => {
-        // 添加分组
         data.forEach(item => {
           item.group = classifyDelta(item.expected, item.predicted);
         });
 
-        // 统计数量
+        // 统计
         const groupNames = ["Exact", "Adjacent", "Within", "Miss"];
         const groupStats = {};
         groupNames.forEach(g=>groupStats[g]=0);
         data.forEach(d=>groupStats[d.group]++);
-
-        // 展示统计
         document.getElementById('stats').innerHTML =
           groupNames.map(g=>`<span style="color:${COLORS[g]}">${g}:</span> ${groupStats[g]}`).join('&nbsp;&nbsp;|&nbsp;&nbsp;');
 
         // 按分组分trace
-        const traces = groupNames.map(group => {
+        // 初始动画，所有点都先透明
+        const tracesAllInvisible = groupNames.map(group => {
           const items = data.filter(d => d.group === group);
           return {
             x: items.map(d=>d.expected),
@@ -68,16 +63,16 @@
               color: COLORS[group],
               size: MARKER_SIZE,
               line: {color:'#14141f',width:MARKER_LINE_WIDTH},
-              opacity: 0.84
+              opacity: 0       // 初始完全不显示，用于动画
             },
-            hovertemplate: '%{text}<extra></extra>',
+            hovertemplate: '%{text}<extra></extra>'
           };
         });
 
         // y=x 参考虚线
         const minX = Math.min(...data.map(d=>d.expected), ...data.map(d=>d.predicted), 0);
         const maxX = Math.max(...data.map(d=>d.expected), ...data.map(d=>d.predicted), 20);
-        traces.push({
+        tracesAllInvisible.push({
           x: [minX, maxX],
           y: [minX, maxX],
           mode: "lines",
@@ -86,7 +81,8 @@
           name: '参考虚线'
         });
 
-        Plotly.newPlot('myplot', traces, {
+        // step1：先画全透明
+        Plotly.newPlot('myplot', tracesAllInvisible, {
           plot_bgcolor:'#23223b', paper_bgcolor:'#23223b',
           legend: {font:{color:'#fff'}, bgcolor:'#23223b', borderwidth:0, bordercolor:'#444'},
           margin:{l:64, r:32, t:44, b:64},
@@ -109,6 +105,51 @@
             linewidth: 1.5
           }
         }, {responsive:true});
+        
+        // step2：动画渐现
+        setTimeout(()=>{
+          // 准备完全可见的trace
+          const tracesVisible = groupNames.map(group => {
+            const items = data.filter(d => d.group === group);
+            return {
+              marker: {
+                opacity: 0.85,
+                color: COLORS[group],
+                size: MARKER_SIZE,
+                line: {color:'#14141f',width:MARKER_LINE_WIDTH}
+              }
+            };
+          });
+          Plotly.animate('myplot', {
+            data: tracesVisible
+          }, {
+            transition: {duration: 900, easing:'cubic-in-out'},
+            frame: {duration: 800, redraw: false}
+          });
+        }, 250);  // 总体动画出现时延
+
+        // step3：增强交互-悬浮时点发光放大
+        // 利用Plotly事件实现
+        const plotDom = document.getElementById('myplot');
+        plotDom.on('plotly_hover', ev => {
+          // 高亮hover点
+          const pn = ev.points[0].pointNumber, tn = ev.points[0].curveNumber;
+          let update = {marker: {size: []}};
+          // 必须按照顺序分别为每个trace维护
+          for(let i=0;i<tracesAllInvisible.length-1;i++) {
+            const len = tracesAllInvisible[i].x.length;
+            update.marker.size[i] = new Array(len).fill(MARKER_SIZE);
+          }
+          update.marker.size[tn] = update.marker.size[tn].slice();
+          update.marker.size[tn][pn] = HOVER_SIZE;
+          Plotly.restyle('myplot', update, groupNames.map((_,i)=>i));
+        });
+        plotDom.on('plotly_unhover', () => {
+          // 恢复所有点到默认大小
+          for(let i=0;i<groupNames.length;i++)
+            Plotly.restyle('myplot', {'marker.size': MARKER_SIZE}, [i]);
+        });
+
       });
   </script>
 </body>
