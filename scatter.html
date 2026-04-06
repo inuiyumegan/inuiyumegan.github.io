@@ -2,17 +2,22 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <title>难度散点对比图</title>
+    <title>期望 vs 预测 难度散点图</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <style>
-      body { background: #1a1a24; color: #fff; }
+      body { background: #181824; color: #fff; font-family: 'Segoe UI', '微软雅黑', Arial, sans-serif; }
+      h2 { color: #95c8ff; margin-left: 10vw; }
+      #myplot { box-shadow: 0 4px 16px #0006; border-radius: 14px; }
+      #stats { margin-left: 10vw; margin-bottom: 16px; }
+      /* 可选: 更紧凑布局 */
     </style>
 </head>
 <body>
-  <h2>期望 vs 预测 难度</h2>
-  <div id="myplot" style="width:90vw; height:70vh;"></div>
+  <h2>期望 vs 预测 难度散点图</h2>
+  <div id="stats"></div>
+  <div id="myplot" style="width:90vw; height:70vh; margin:auto;"></div>
   <script>
-    // 按差值自动分组
+    // 自动根据差值分组
     function classifyDelta(exp, pred) {
       const d = Math.abs(exp - pred);
       if (d === 0) return 'Exact';
@@ -22,11 +27,12 @@
     }
 
     const COLORS = {
-      "Exact": "#85C4F9",
+      "Exact": "#8aceff",
       "Adjacent": "#77e89b",
-      "Within": "#ff9d3c",
-      "Miss": "#db373c"
+      "Within": "#ffae54",
+      "Miss": "#ec5659"
     };
+    const MARKER_SIZE = 13, MARKER_LINE_WIDTH = 1.5;
 
     fetch('estdan_scatter.json')
       .then(res=>res.json())
@@ -36,47 +42,74 @@
           item.group = classifyDelta(item.expected, item.predicted);
         });
 
+        // 统计数量
+        const groupNames = ["Exact", "Adjacent", "Within", "Miss"];
+        const groupStats = {};
+        groupNames.forEach(g=>groupStats[g]=0);
+        data.forEach(d=>groupStats[d.group]++);
+
+        // 展示统计
+        document.getElementById('stats').innerHTML =
+          groupNames.map(g=>`<span style="color:${COLORS[g]}">${g}:</span> ${groupStats[g]}`).join('&nbsp;&nbsp;|&nbsp;&nbsp;');
+
         // 按分组分trace
-        const groups = ["Exact", "Adjacent", "Within", "Miss"];
-        const traces = groups.map(group => {
+        const traces = groupNames.map(group => {
           const items = data.filter(d => d.group === group);
           return {
             x: items.map(d=>d.expected),
             y: items.map(d=>d.predicted),
             name: group,
             mode: "markers",
-            text: items.map(d => `${d.name}<br>期望:${d.expected}　预测:${d.predicted}<br>${d.delta}`),
-            marker: { color: COLORS[group], size:11, line:{color:'#222',width:1}},
+            text: items.map(d =>
+              `<b>${d.name}</b><br><span style="color:#e1e1e1">期望:</span> <b>${d.expected}</b> &nbsp; <span style="color:#e1e1e1">预测:</span> <b>${d.predicted}</b><br>` +
+              `<span style="color:${COLORS[group]}"><b>${d.delta}</b></span>`
+            ),
+            marker: {
+              color: COLORS[group],
+              size: MARKER_SIZE,
+              line: {color:'#14141f',width:MARKER_LINE_WIDTH},
+              opacity: 0.84
+            },
+            hovertemplate: '%{text}<extra></extra>',
           };
         });
 
-        // 增加虚线 y=x 作为参考
-        const minX = Math.min(...data.map(d=>d.expected), ...data.map(d=>d.predicted));
-        const maxX = Math.max(...data.map(d=>d.expected), ...data.map(d=>d.predicted));
+        // y=x 参考虚线
+        const minX = Math.min(...data.map(d=>d.expected), ...data.map(d=>d.predicted), 0);
+        const maxX = Math.max(...data.map(d=>d.expected), ...data.map(d=>d.predicted), 20);
         traces.push({
           x: [minX, maxX],
           y: [minX, maxX],
           mode: "lines",
           line: {dash: 'dash', color: '#bbb', width: 2},
           hoverinfo: "skip",
-          showlegend: false
+          name: '参考虚线'
         });
 
         Plotly.newPlot('myplot', traces, {
           plot_bgcolor:'#23223b', paper_bgcolor:'#23223b',
-          legend: {font:{color:'#fff'}, bgcolor:'#23223b'},
+          legend: {font:{color:'#fff'}, bgcolor:'#23223b', borderwidth:0, bordercolor:'#444'},
+          margin:{l:64, r:32, t:44, b:64},
           xaxis:{
-            title:'期望',
-            color:'#fff',
-            gridcolor:'#444'
+            title:'期望难度',
+            tickformat: '.1f',
+            color:'#d6f0ff',
+            gridcolor:'#333',
+            zeroline: false,
+            linecolor:'#444',
+            linewidth: 1.5
           },
           yaxis:{
-            title:'预测',
-            color:'#fff',
-            gridcolor:'#444'
+            title:'预测难度',
+            tickformat: '.1f',
+            color:'#d6f0ff',
+            gridcolor:'#333',
+            zeroline: false,
+            linecolor:'#444',
+            linewidth: 1.5
           }
         }, {responsive:true});
-      })
+      });
   </script>
 </body>
 </html>
