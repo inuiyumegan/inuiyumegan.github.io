@@ -1,20 +1,54 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8"/>
-    <title>期望 vs 预测 难度散点图</title>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <style>
-        body { background: #181824; color: #fff; font-family: 'Segoe UI', '微软雅黑', Arial, sans-serif; }
-        h2 { color: #95c8ff; margin-left: 10vw; }
-        #myplot { box-shadow: 0 4px 16px #0006; border-radius: 14px; }
-        #stats { margin-left: 10vw; margin-bottom: 16px; }
-    </style>
+  <meta charset="utf-8"/>
+  <title>期望 vs 预测 难度聚合动画提示图</title>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style>
+      body { background: #181824; color: #fff; font-family: 'Segoe UI', '微软雅黑', Arial, sans-serif; }
+      h2 { color: #95c8ff; margin-left: 10vw; }
+      #myplot { box-shadow: 0 4px 16px #0006; border-radius: 14px; }
+      #stats { margin-left: 10vw; margin-bottom: 16px; }
+      /* 自定义悬浮窗样式/动画 */
+      #custom-tooltip {
+        display: none;
+        opacity: 0;
+        position: absolute;
+        left: 0; top: 0; z-index: 10;
+        min-width: 340px;
+        font-size: 1.07em;
+        pointer-events: none;
+        background: rgba(25,25,32, 0.98);
+        color: #fff;
+        padding: 12px 16px 10px 13px;
+        border-radius: 10px;
+        box-shadow: 0 4px 24px #000c, 0 1.5px 0px #3338;
+        border: 2px solid #222;
+        /* 动画：渐入渐出 */
+        transition: opacity 0.22s cubic-bezier(.35,1.6,.2,1.01);
+      }
+      #custom-tooltip.show {
+        display: block;
+        opacity: 1;
+      }
+      #custom-tooltip .item {
+        display: flex; align-items: center;
+        margin-bottom: 2px; line-height:1.4;
+        font-family: 'Consolas','Menlo','微软雅黑',monospace;
+      }
+      #custom-tooltip .dot {
+        display:inline-block; width:16px; height:15px; margin-right:8px;
+        border-radius:4px; background: #8aceff;
+        flex-shrink:0;
+      }
+      #custom-tooltip .item:last-child { margin-bottom: 0; }
+  </style>
 </head>
 <body>
-  <h2>期望 vs 预测 难度散点图</h2>
+  <h2>期望 vs 预测 难度聚合动画提示图</h2>
   <div id="stats"></div>
-  <div id="myplot" style="width:90vw; height:70vh; margin:auto;"></div>
+  <div id="myplot" style="width:90vw; height:70vh; margin:auto; position:relative;"></div>
+  <div id="custom-tooltip"></div>
   <script>
     function classifyDelta(exp, pred) {
       const d = Math.abs(exp - pred);
@@ -29,8 +63,8 @@
       "Within": "#ffae54",
       "Miss": "#ec5659"
     };
-    const MARKER_SIZE = 11;
-    const JITTER_UNIT = 0.14;
+    const MARKER_SIZE = 12;
+    const groupNames = ["Exact", "Adjacent", "Within", "Miss"];
 
     fetch('estdan_scatter.json')
       .then(res=>res.json())
@@ -39,45 +73,33 @@
           item.group = classifyDelta(item.expected, item.predicted);
         });
 
-        const groupNames = ["Exact", "Adjacent", "Within", "Miss"];
+        // 统计计数
         const groupStats = {};
         groupNames.forEach(g=>groupStats[g]=0);
         data.forEach(d=>groupStats[d.group]++);
         document.getElementById('stats').innerHTML =
           groupNames.map(g=>`<span style="color:${COLORS[g]}">${g}:</span> ${groupStats[g]}`).join('&nbsp;&nbsp;|&nbsp;&nbsp;');
 
-        // jitter防重叠
-        const posCount = {};
-        data.forEach(d => {
-          const key = `${d.expected}-${d.predicted}`;
-          if (!posCount[key]) posCount[key] = 0;
-          d.predicted_jitter = d.predicted + (posCount[key] * JITTER_UNIT - ((posCount[key]>0)?JITTER_UNIT/1.5:0));
-          posCount[key]++;
-        });
-
-        // 每分组一个trace（以x轴分组以方便多曲同行tooltip）
+        // 横纵聚集一列所有点，不加 jitter
         const traces = groupNames.map(group => {
           const items = data.filter(d => d.group === group);
           return {
             x: items.map(d=>d.expected),
-            y: items.map(d=>d.predicted_jitter),
+            y: items.map(d=>d.predicted),
             name: group,
-            // 标题样式与legend一致，主色块自动添加
             mode: "markers",
-            text: items.map(d =>
-              `${d.name} — Exp: ${d.expected}  Got: ${d.predicted}`
-            ),
             marker: {
               color: COLORS[group],
               size: MARKER_SIZE,
               line: {color:'#14141f', width:1},
               opacity: 0.85
             },
-            hovertemplate: '%{text}<extra></extra>',
+            hoverinfo: "none",      // 禁用原生浮窗
+            showlegend: true
           };
         });
 
-        // y=x 参考虚线
+        // y=x 虚线
         const minX = Math.min(...data.map(d=>d.expected), ...data.map(d=>d.predicted), 0);
         const maxX = Math.max(...data.map(d=>d.expected), ...data.map(d=>d.predicted), 20);
         traces.push({
@@ -93,8 +115,7 @@
           plot_bgcolor:'#23223b', paper_bgcolor:'#23223b',
           legend: {font:{color:'#fff'}, bgcolor:'#23223b', borderwidth:0, bordercolor:'#444'},
           margin:{l:64, r:32, t:44, b:64},
-          dragmode: 'zoom',
-          hovermode: 'x', // 关键：同行同x下所有点tooltip一起显示
+          hovermode: false, // 禁用默认hover浮窗
           xaxis:{
             title:'期望难度',
             tickformat: '.1f',
@@ -112,13 +133,61 @@
             zeroline: false,
             linecolor:'#444',
             linewidth: 1.5
-          },
-          hoverlabel: {
-            bgcolor: "#181824",
-            bordercolor: "#222",
-            font: {color: "#fff", size: 15}
           }
         }, {responsive:true});
+
+        // -------自定义tooltip逻辑--------
+        const plotDiv = document.getElementById('myplot');
+        const tooltip = document.getElementById('custom-tooltip');
+        let timer = null;
+
+        plotDiv.onmousemove = function(e) {
+          // 计算鼠标在canvas的逻辑坐标（取 expected 值）
+          // 1. 找到鼠标在坐标轴对应 plotly x 值
+          const bounding = plotDiv.getBoundingClientRect();
+          // Plotly margin l
+          const plotlyLeft = bounding.left + 64;
+          const plotlyRight = bounding.right - 32;
+          const plotlyWidth = plotlyRight - plotlyLeft;
+          const mouseX = e.clientX;
+          const xaxis = traces[0].x;
+          if(mouseX < plotlyLeft || mouseX > plotlyRight) {
+            tooltip.classList.remove("show"); tooltip.style.opacity = 0; return;
+          }
+          // 2. 用线性映射估算鼠标的expected值（近似方案，不严格,但够用）
+          const expMin = minX, expMax = maxX;
+          const expectedValue = expMin + (expMax - expMin) * ((mouseX-plotlyLeft)/plotlyWidth);
+          // 3. 在一定容差范围内收集同列点（±0.13~0.18可自调，越大范围越宽）
+          const THRESH = 0.17;
+          const selected = data.filter(d => Math.abs(d.expected - expectedValue) < THRESH);
+          if(selected.length===0) { tooltip.classList.remove("show"); tooltip.style.opacity = 0; return; }
+
+          // 4. 构造提示内容
+          let html = '';
+          selected.sort((a,b)=>b.predicted-a.predicted); // 大在前
+          selected.forEach(item => {
+            html += `<div class="item">
+                <span class="dot" style="background:${COLORS[item.group]};"></span>
+                ${item.name.replace(/</g,"&lt;")} — Exp: ${item.expected} &nbsp; Got: ${item.predicted}
+            </div>`;
+          });
+          tooltip.innerHTML = html;
+
+          // 5. 定位与动画
+          const tipWidth = 360, tipHeight = 24*selected.length+32;
+          let left = mouseX - bounding.left + 18;
+          let top = e.clientY - bounding.top - 8;
+          if(left+tipWidth+30 > bounding.width) left = bounding.width - tipWidth - 30;
+          if(top+tipHeight+20 > bounding.height) top = bounding.height - tipHeight - 20;
+          tooltip.style.left = left + "px";
+          tooltip.style.top = top + "px";
+          tooltip.classList.add("show");
+        };
+
+        plotDiv.onmouseleave = function() {
+          tooltip.classList.remove("show");
+          tooltip.style.opacity = 0;
+        };
       });
   </script>
 </body>
