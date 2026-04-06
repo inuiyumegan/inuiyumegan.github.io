@@ -9,13 +9,6 @@
         h2 { color: #95c8ff; margin-left: 10vw; }
         #myplot { box-shadow: 0 4px 16px #0006; border-radius: 14px; }
         #stats { margin-left: 10vw; margin-bottom: 16px; }
-        .js-plotly-plot .plotly-tooltip {
-            border-radius: 8px !important;
-            background: #181824 !important;
-            color: #95c8ff !important;
-            font-size: 1.06em !important;
-            box-shadow: 0 2px 14px #000a;
-        }
     </style>
 </head>
 <body>
@@ -36,8 +29,8 @@
       "Within": "#ffae54",
       "Miss": "#ec5659"
     };
-    const MARKER_SIZE = 10;         // 点尺寸，稍微缩小防重叠
-    const JITTER_UNIT = 0.14;       // 抖动偏移量，越大越不容易遮挡
+    const MARKER_SIZE = 11;
+    const JITTER_UNIT = 0.14;
 
     fetch('estdan_scatter.json')
       .then(res=>res.json())
@@ -46,7 +39,6 @@
           item.group = classifyDelta(item.expected, item.predicted);
         });
 
-        // 统计计数
         const groupNames = ["Exact", "Adjacent", "Within", "Miss"];
         const groupStats = {};
         groupNames.forEach(g=>groupStats[g]=0);
@@ -54,7 +46,7 @@
         document.getElementById('stats').innerHTML =
           groupNames.map(g=>`<span style="color:${COLORS[g]}">${g}:</span> ${groupStats[g]}`).join('&nbsp;&nbsp;|&nbsp;&nbsp;');
 
-        // jitter防重叠主逻辑：同expected、predicted点y坐标微偏移
+        // jitter防重叠
         const posCount = {};
         data.forEach(d => {
           const key = `${d.expected}-${d.predicted}`;
@@ -63,17 +55,17 @@
           posCount[key]++;
         });
 
-        // trace分组
+        // 每分组一个trace（以x轴分组以方便多曲同行tooltip）
         const traces = groupNames.map(group => {
           const items = data.filter(d => d.group === group);
           return {
             x: items.map(d=>d.expected),
             y: items.map(d=>d.predicted_jitter),
             name: group,
+            // 标题样式与legend一致，主色块自动添加
             mode: "markers",
             text: items.map(d =>
-              `<b>${d.name}</b><br><span style="color:#e1e1e1">期望:</span> <b>${d.expected}</b> &nbsp; <span style="color:#e1e1e1">预测:</span> <b>${d.predicted}</b><br>` +
-              `<span style="color:${COLORS[group]}"><b>${d.delta}</b></span>`
+              `${d.name} — Exp: ${d.expected}  Got: ${d.predicted}`
             ),
             marker: {
               color: COLORS[group],
@@ -101,7 +93,8 @@
           plot_bgcolor:'#23223b', paper_bgcolor:'#23223b',
           legend: {font:{color:'#fff'}, bgcolor:'#23223b', borderwidth:0, bordercolor:'#444'},
           margin:{l:64, r:32, t:44, b:64},
-          dragmode: 'zoom', // 可改为 'select'
+          dragmode: 'zoom',
+          hovermode: 'x', // 关键：同行同x下所有点tooltip一起显示
           xaxis:{
             title:'期望难度',
             tickformat: '.1f',
@@ -119,6 +112,11 @@
             zeroline: false,
             linecolor:'#444',
             linewidth: 1.5
+          },
+          hoverlabel: {
+            bgcolor: "#181824",
+            bordercolor: "#222",
+            font: {color: "#fff", size: 15}
           }
         }, {responsive:true});
       });
