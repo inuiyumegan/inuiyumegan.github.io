@@ -9,6 +9,13 @@
         h2 { color: #95c8ff; margin-left: 10vw; }
         #myplot { box-shadow: 0 4px 16px #0006; border-radius: 14px; }
         #stats { margin-left: 10vw; margin-bottom: 16px; }
+        .js-plotly-plot .plotly-tooltip {
+            border-radius: 8px !important;
+            background: #181824 !important;
+            color: #95c8ff !important;
+            font-size: 1.06em !important;
+            box-shadow: 0 2px 14px #000a;
+        }
     </style>
 </head>
 <body>
@@ -29,7 +36,8 @@
       "Within": "#ffae54",
       "Miss": "#ec5659"
     };
-    const MARKER_SIZE = 13;
+    const MARKER_SIZE = 10;         // 点尺寸，稍微缩小防重叠
+    const JITTER_UNIT = 0.14;       // 抖动偏移量，越大越不容易遮挡
 
     fetch('estdan_scatter.json')
       .then(res=>res.json())
@@ -38,16 +46,7 @@
           item.group = classifyDelta(item.expected, item.predicted);
         });
 
-        // ——自动jitter防止重叠
-        const usedPos = {};
-        data.forEach(d => {
-          const key = `${d.expected}-${d.predicted}`;
-          if (!usedPos[key]) usedPos[key] = 0;
-          d.predicted_jitter = d.predicted + (usedPos[key] * 0.06 - 0.09); // -0.09, -0.03, 0.03, 0.09...
-          usedPos[key]++;
-        });
-
-        // group 计数
+        // 统计计数
         const groupNames = ["Exact", "Adjacent", "Within", "Miss"];
         const groupStats = {};
         groupNames.forEach(g=>groupStats[g]=0);
@@ -55,7 +54,16 @@
         document.getElementById('stats').innerHTML =
           groupNames.map(g=>`<span style="color:${COLORS[g]}">${g}:</span> ${groupStats[g]}`).join('&nbsp;&nbsp;|&nbsp;&nbsp;');
 
-        // ——每个trace用jitter坐标
+        // jitter防重叠主逻辑：同expected、predicted点y坐标微偏移
+        const posCount = {};
+        data.forEach(d => {
+          const key = `${d.expected}-${d.predicted}`;
+          if (!posCount[key]) posCount[key] = 0;
+          d.predicted_jitter = d.predicted + (posCount[key] * JITTER_UNIT - ((posCount[key]>0)?JITTER_UNIT/1.5:0));
+          posCount[key]++;
+        });
+
+        // trace分组
         const traces = groupNames.map(group => {
           const items = data.filter(d => d.group === group);
           return {
@@ -70,8 +78,8 @@
             marker: {
               color: COLORS[group],
               size: MARKER_SIZE,
-              line: {color:'#14141f',width:1.5},
-              opacity: 0.8
+              line: {color:'#14141f', width:1},
+              opacity: 0.85
             },
             hovertemplate: '%{text}<extra></extra>',
           };
@@ -93,6 +101,7 @@
           plot_bgcolor:'#23223b', paper_bgcolor:'#23223b',
           legend: {font:{color:'#fff'}, bgcolor:'#23223b', borderwidth:0, bordercolor:'#444'},
           margin:{l:64, r:32, t:44, b:64},
+          dragmode: 'zoom', // 可改为 'select'
           xaxis:{
             title:'期望难度',
             tickformat: '.1f',
