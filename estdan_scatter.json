@@ -1,0 +1,962 @@
+[
+  {
+    "name": "Miracle Chance",
+    "expected": 1.0,
+    "predicted": -1.0,
+    "delta": "Δ=-2.0"
+  },
+  {
+    "name": "Flashes",
+    "expected": 2.0,
+    "predicted": 2.8,
+    "delta": "Δ=0.8"
+  },
+  {
+    "name": "Dimension Trippere!!!!",
+    "expected": 3.0,
+    "predicted": 1.8,
+    "delta": "Δ=-1.2"
+  },
+  {
+    "name": "CrossOver",
+    "expected": 4.0,
+    "predicted": 1.2,
+    "delta": "Δ=-2.8"
+  },
+  {
+    "name": "能量花",
+    "expected": 5.0,
+    "predicted": 3.2,
+    "delta": "Δ=-1.8"
+  },
+  {
+    "name": "Sweet Cherry X",
+    "expected": 6.0,
+    "predicted": 4.8,
+    "delta": "Δ=-1.2"
+  },
+  {
+    "name": "Last Chance",
+    "expected": 7.0,
+    "predicted": 5.2,
+    "delta": "Δ=-1.8"
+  },
+  {
+    "name": "TTL(8)",
+    "expected": 8.0,
+    "predicted": 7.4,
+    "delta": "Δ=-0.6"
+  },
+  {
+    "name": "Can't Take my Eyes",
+    "expected": 9.0,
+    "predicted": 7.6,
+    "delta": "Δ=-1.4"
+  },
+  {
+    "name": "蝎子舞",
+    "expected": 9.0,
+    "predicted": 9.0,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "大章鱼(10)",
+    "expected": 10.0,
+    "predicted": 11.0,
+    "delta": "Δ=1.0"
+  },
+  {
+    "name": "大章鱼(loved)",
+    "expected": 10.4,
+    "predicted": 11.0,
+    "delta": "Δ=0.6"
+  },
+  {
+    "name": "MMT x1.05",
+    "expected": 10.6,
+    "predicted": 10.6,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "黑桑巴",
+    "expected": 11.0,
+    "predicted": 11.0,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "范式转移(beta)",
+    "expected": 12.0,
+    "predicted": 12.0,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "爱迪生 x1.15",
+    "expected": 12.0,
+    "predicted": 11.6,
+    "delta": "Δ=-0.4"
+  },
+  {
+    "name": "溺水者",
+    "expected": 12.4,
+    "predicted": 12.4,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "棒棒冰",
+    "expected": 12.6,
+    "predicted": 12.0,
+    "delta": "Δ=-0.6"
+  },
+  {
+    "name": "兔子叠",
+    "expected": 12.6,
+    "predicted": 12.4,
+    "delta": "Δ=-0.2"
+  },
+  {
+    "name": "Break x1.1",
+    "expected": 13.0,
+    "predicted": 13.4,
+    "delta": "Δ=0.4"
+  },
+  {
+    "name": "Sendan Life(OpakyL)",
+    "expected": 13.0,
+    "predicted": 12.4,
+    "delta": "Δ=-0.6"
+  },
+  {
+    "name": "战船",
+    "expected": 13.4,
+    "predicted": 12.6,
+    "delta": "Δ=-0.8"
+  },
+  {
+    "name": "水族馆 x1.3",
+    "expected": 14.0,
+    "predicted": 13.6,
+    "delta": "Δ=-0.4"
+  },
+  {
+    "name": "Strong 280(isxi)",
+    "expected": 14.0,
+    "predicted": 13.6,
+    "delta": "Δ=-0.4"
+  },
+  {
+    "name": "生命花园 x1.05",
+    "expected": 14.4,
+    "predicted": 14.0,
+    "delta": "Δ=-0.4"
+  },
+  {
+    "name": "隼鸟(e8v3)",
+    "expected": 14.6,
+    "predicted": 14.4,
+    "delta": "Δ=-0.2"
+  },
+  {
+    "name": "玫瑰石英 x1.3",
+    "expected": 15.0,
+    "predicted": 14.6,
+    "delta": "Δ=-0.4"
+  },
+  {
+    "name": "疯锤(e9v3)",
+    "expected": 15.0,
+    "predicted": 15.0,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "彩v(spz cut)",
+    "expected": 15.6,
+    "predicted": 14.6,
+    "delta": "Δ=-1.0"
+  },
+  {
+    "name": "叠使尘",
+    "expected": 15.6,
+    "predicted": 15.6,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "叠使尘(old)",
+    "expected": 16.4,
+    "predicted": 17.0,
+    "delta": "Δ=0.6"
+  },
+  {
+    "name": "Double Universe x1.2",
+    "expected": 16.0,
+    "predicted": 14.4,
+    "delta": "Δ=-1.6"
+  },
+  {
+    "name": "无限天堂(180bpm)",
+    "expected": 16.0,
+    "predicted": 14.4,
+    "delta": "Δ=-1.6"
+  },
+  {
+    "name": "嘟嘟哒",
+    "expected": 17.2,
+    "predicted": 17.4,
+    "delta": "Δ=0.2"
+  },
+  {
+    "name": "rip me apart(theta) x1.075",
+    "expected": 17.8,
+    "predicted": 18.4,
+    "delta": "Δ=0.6"
+  },
+  {
+    "name": "Want U 2",
+    "expected": 1.0,
+    "predicted": 0.4,
+    "delta": "Δ=-0.6"
+  },
+  {
+    "name": "Vermillion",
+    "expected": 2.0,
+    "predicted": 0.8,
+    "delta": "Δ=-1.2"
+  },
+  {
+    "name": "Kirlian Shores",
+    "expected": 3.0,
+    "predicted": 0.2,
+    "delta": "Δ=-2.8"
+  },
+  {
+    "name": "Ephemera",
+    "expected": 4.0,
+    "predicted": 3.8,
+    "delta": "Δ=-0.2"
+  },
+  {
+    "name": "Brainfog",
+    "expected": 5.0,
+    "predicted": 4.2,
+    "delta": "Δ=-0.8"
+  },
+  {
+    "name": "The Bird's Midair Heatstroke",
+    "expected": 6.0,
+    "predicted": 4.0,
+    "delta": "Δ=-2.0"
+  },
+  {
+    "name": "WAVE",
+    "expected": 7.0,
+    "predicted": 6.6,
+    "delta": "Δ=-0.4"
+  },
+  {
+    "name": "RATO",
+    "expected": 8.0,
+    "predicted": 7.4,
+    "delta": "Δ=-0.6"
+  },
+  {
+    "name": "蝉",
+    "expected": 9.0,
+    "predicted": 9.2,
+    "delta": "Δ=0.2"
+  },
+  {
+    "name": "Rave 7次 x1.1",
+    "expected": 10.0,
+    "predicted": 11.0,
+    "delta": "Δ=1.0"
+  },
+  {
+    "name": "大轮之魂 x1.2",
+    "expected": 10.0,
+    "predicted": 9.0,
+    "delta": "Δ=-1.0"
+  },
+  {
+    "name": "水飞沫 x1.1",
+    "expected": 10.8,
+    "predicted": 11.0,
+    "delta": "Δ=0.2"
+  },
+  {
+    "name": "Towards the Horizon",
+    "expected": 10.8,
+    "predicted": 11.0,
+    "delta": "Δ=0.2"
+  },
+  {
+    "name": "超天酱 x1.05",
+    "expected": 11.4,
+    "predicted": 12.0,
+    "delta": "Δ=0.6"
+  },
+  {
+    "name": "蓝星",
+    "expected": 12.0,
+    "predicted": 12.4,
+    "delta": "Δ=0.4"
+  },
+  {
+    "name": "Asymmetrical",
+    "expected": 12.0,
+    "predicted": 12.0,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "快冲",
+    "expected": 12.6,
+    "predicted": 12.6,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "云散烟消",
+    "expected": 12.8,
+    "predicted": 13.0,
+    "delta": "Δ=0.2"
+  },
+  {
+    "name": "Extraction",
+    "expected": 13.4,
+    "predicted": 13.4,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "Tornado主(interliser)",
+    "expected": 13.4,
+    "predicted": 12.0,
+    "delta": "Δ=-1.4"
+  },
+  {
+    "name": "你和驴(Guilhermeziat)",
+    "expected": 13.6,
+    "predicted": 13.4,
+    "delta": "Δ=-0.2"
+  },
+  {
+    "name": "影猫 x1.2",
+    "expected": 13.6,
+    "predicted": 12.8,
+    "delta": "Δ=-0.8"
+  },
+  {
+    "name": "新月岛 x1.05",
+    "expected": 14.0,
+    "predicted": 14.0,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "暗黑舞踏会",
+    "expected": 14.4,
+    "predicted": 14.0,
+    "delta": "Δ=-0.4"
+  },
+  {
+    "name": "Alpha",
+    "expected": 14.4,
+    "predicted": 14.4,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "辉夜姬(mintapril) x1.2",
+    "expected": 14.4,
+    "predicted": 14.0,
+    "delta": "Δ=-0.4"
+  },
+  {
+    "name": "骤雨的狭间",
+    "expected": 14.7,
+    "predicted": 15.0,
+    "delta": "Δ=0.3"
+  },
+  {
+    "name": "你和驴(e9v3)",
+    "expected": 14.8,
+    "predicted": 15.4,
+    "delta": "Δ=0.6"
+  },
+  {
+    "name": "Matusa Bomber x1.3",
+    "expected": 15.0,
+    "predicted": 13.4,
+    "delta": "Δ=-1.6"
+  },
+  {
+    "name": "大树 x1.4",
+    "expected": 15.2,
+    "predicted": 15.4,
+    "delta": "Δ=0.2"
+  },
+  {
+    "name": "怪秋 x1.4",
+    "expected": 15.6,
+    "predicted": 15.6,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "Apocalyptic Premonition x1.05",
+    "expected": 16.0,
+    "predicted": 16.0,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "牛肉云(efv3)",
+    "expected": 16.0,
+    "predicted": 16.8,
+    "delta": "Δ=0.8"
+  },
+  {
+    "name": "northern limit(haku) x1.1",
+    "expected": 16.4,
+    "predicted": 16.6,
+    "delta": "Δ=0.2"
+  },
+  {
+    "name": "炼狱(efv2) x1.14",
+    "expected": 16.4,
+    "predicted": 16.6,
+    "delta": "Δ=0.2"
+  },
+  {
+    "name": "破坏王",
+    "expected": 17.2,
+    "predicted": 17.4,
+    "delta": "Δ=0.2"
+  },
+  {
+    "name": "Grinding Of The Teeth x1.35",
+    "expected": 18.0,
+    "predicted": 17.6,
+    "delta": "Δ=-0.4"
+  },
+  {
+    "name": "Shelter",
+    "expected": 1.0,
+    "predicted": 0.8,
+    "delta": "Δ=-0.2"
+  },
+  {
+    "name": "Snow Storm",
+    "expected": 2.0,
+    "predicted": 1.6,
+    "delta": "Δ=-0.4"
+  },
+  {
+    "name": "Entelechia",
+    "expected": 3.0,
+    "predicted": 3.0,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "香农定理",
+    "expected": 4.0,
+    "predicted": 3.4,
+    "delta": "Δ=-0.6"
+  },
+  {
+    "name": "调色板",
+    "expected": 5.0,
+    "predicted": 5.0,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "TDPDG",
+    "expected": 5.0,
+    "predicted": 4.8,
+    "delta": "Δ=-0.2"
+  },
+  {
+    "name": "SOS",
+    "expected": 6.0,
+    "predicted": 5.2,
+    "delta": "Δ=-0.8"
+  },
+  {
+    "name": "Luv Lab 22ate!",
+    "expected": 6.0,
+    "predicted": 6.2,
+    "delta": "Δ=0.2"
+  },
+  {
+    "name": "Five Five Five Guys",
+    "expected": 6.6,
+    "predicted": 6.0,
+    "delta": "Δ=-0.6"
+  },
+  {
+    "name": "Trickstarz",
+    "expected": 8.0,
+    "predicted": 7.4,
+    "delta": "Δ=-0.6"
+  },
+  {
+    "name": "电话歌",
+    "expected": 9.0,
+    "predicted": 7.2,
+    "delta": "Δ=-1.8"
+  },
+  {
+    "name": "咖喱 x0.9",
+    "expected": 10.0,
+    "predicted": 8.0,
+    "delta": "Δ=-2.0"
+  },
+  {
+    "name": "dope monkeys x1.02",
+    "expected": 10.1,
+    "predicted": 9.0,
+    "delta": "Δ=-1.1"
+  },
+  {
+    "name": "永夜游行 x1.05",
+    "expected": 10.3,
+    "predicted": 9.4,
+    "delta": "Δ=-0.9"
+  },
+  {
+    "name": "鸟笼",
+    "expected": 10.4,
+    "predicted": 10.6,
+    "delta": "Δ=0.2"
+  },
+  {
+    "name": "新宝岛",
+    "expected": 10.5,
+    "predicted": 10.6,
+    "delta": "Δ=0.1"
+  },
+  {
+    "name": "message(e2v2)",
+    "expected": 10.7,
+    "predicted": 10.6,
+    "delta": "Δ=-0.1"
+  },
+  {
+    "name": "P8107 x0.95",
+    "expected": 10.8,
+    "predicted": 11.6,
+    "delta": "Δ=0.8"
+  },
+  {
+    "name": "Makiba",
+    "expected": 11.0,
+    "predicted": 11.0,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "Enthanasia x1.05",
+    "expected": 11.2,
+    "predicted": 11.4,
+    "delta": "Δ=0.2"
+  },
+  {
+    "name": "End Time(e3v2) x1.1",
+    "expected": 11.5,
+    "predicted": 11.0,
+    "delta": "Δ=-0.5"
+  },
+  {
+    "name": "Akasha(sp3v2) x0.88",
+    "expected": 11.7,
+    "predicted": 10.6,
+    "delta": "Δ=-1.1"
+  },
+  {
+    "name": "星光(beta)",
+    "expected": 12.0,
+    "predicted": 11.4,
+    "delta": "Δ=-0.6"
+  },
+  {
+    "name": "YELL!(e4v2)",
+    "expected": 12.2,
+    "predicted": 11.6,
+    "delta": "Δ=-0.6"
+  },
+  {
+    "name": "马次",
+    "expected": 12.4,
+    "predicted": 11.0,
+    "delta": "Δ=-1.4"
+  },
+  {
+    "name": "纯净卢比",
+    "expected": 12.4,
+    "predicted": 12.0,
+    "delta": "Δ=-0.4"
+  },
+  {
+    "name": "Odin(fullerene)",
+    "expected": 12.4,
+    "predicted": 11.6,
+    "delta": "Δ=-0.8"
+  },
+  {
+    "name": "水晶世界(e5v2)",
+    "expected": 12.5,
+    "predicted": 12.6,
+    "delta": "Δ=0.1"
+  },
+  {
+    "name": "曾根崎心中 x0.925",
+    "expected": 12.7,
+    "predicted": 12.6,
+    "delta": "Δ=-0.1"
+  },
+  {
+    "name": "Reflec Streamz(gamma)",
+    "expected": 13.0,
+    "predicted": 13.4,
+    "delta": "Δ=0.4"
+  },
+  {
+    "name": "天使尘",
+    "expected": 13.4,
+    "predicted": 12.6,
+    "delta": "Δ=-0.8"
+  },
+  {
+    "name": "电天使 x1.2",
+    "expected": 13.4,
+    "predicted": 13.0,
+    "delta": "Δ=-0.4"
+  },
+  {
+    "name": "Pastel Subliminal",
+    "expected": 13.5,
+    "predicted": 13.4,
+    "delta": "Δ=-0.1"
+  },
+  {
+    "name": "Nopea",
+    "expected": 13.6,
+    "predicted": 13.4,
+    "delta": "Δ=-0.2"
+  },
+  {
+    "name": "Ascension to heaven(sp6v2) x0.975",
+    "expected": 13.8,
+    "predicted": 14.0,
+    "delta": "Δ=0.2"
+  },
+  {
+    "name": "火山(delta)",
+    "expected": 14.0,
+    "predicted": 13.6,
+    "delta": "Δ=-0.4"
+  },
+  {
+    "name": "松子",
+    "expected": 14.4,
+    "predicted": 14.4,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "Stay Alive x1.25",
+    "expected": 14.5,
+    "predicted": 14.6,
+    "delta": "Δ=0.1"
+  },
+  {
+    "name": "Paraclete -Miracle",
+    "expected": 14.5,
+    "predicted": 14.6,
+    "delta": "Δ=0.1"
+  },
+  {
+    "name": "Lalala.Refrain x1.1",
+    "expected": 14.6,
+    "predicted": 15.0,
+    "delta": "Δ=0.4"
+  },
+  {
+    "name": "铁道乱(ATTang)",
+    "expected": 14.6,
+    "predicted": 13.6,
+    "delta": "Δ=-1.0"
+  },
+  {
+    "name": "天津神 x1.15",
+    "expected": 14.6,
+    "predicted": 14.6,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "范式转移(e8v2) X1.15",
+    "expected": 14.7,
+    "predicted": 14.6,
+    "delta": "Δ=-0.1"
+  },
+  {
+    "name": "葬送歌",
+    "expected": 14.8,
+    "predicted": 15.4,
+    "delta": "Δ=0.6"
+  },
+  {
+    "name": "马主(loved)",
+    "expected": 15.0,
+    "predicted": 15.4,
+    "delta": "Δ=0.4"
+  },
+  {
+    "name": "终点",
+    "expected": 15.0,
+    "predicted": 15.4,
+    "delta": "Δ=0.4"
+  },
+  {
+    "name": "Finixe(zeta) x1.1",
+    "expected": 15.4,
+    "predicted": 16.4,
+    "delta": "Δ=1.0"
+  },
+  {
+    "name": "Hibachi",
+    "expected": 16.0,
+    "predicted": 15.6,
+    "delta": "Δ=-0.4"
+  },
+  {
+    "name": "Kizuato x1.3",
+    "expected": 16.2,
+    "predicted": 16.4,
+    "delta": "Δ=0.2"
+  },
+  {
+    "name": "雷暴",
+    "expected": 17.2,
+    "predicted": 17.0,
+    "delta": "Δ=-0.2"
+  },
+  {
+    "name": "Agoniya x1.1",
+    "expected": 18.0,
+    "predicted": 17.6,
+    "delta": "Δ=-0.4"
+  },
+  {
+    "name": "Tommorow Perfume",
+    "expected": 1.0,
+    "predicted": 1.4,
+    "delta": "Δ=0.4"
+  },
+  {
+    "name": "Eternal Drain",
+    "expected": 2.0,
+    "predicted": 1.8,
+    "delta": "Δ=-0.2"
+  },
+  {
+    "name": "真蓝",
+    "expected": 3.0,
+    "predicted": 3.0,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "暗天使",
+    "expected": 4.2,
+    "predicted": 4.4,
+    "delta": "Δ=0.2"
+  },
+  {
+    "name": "Elektric U-Phoria",
+    "expected": 5.0,
+    "predicted": 5.6,
+    "delta": "Δ=0.6"
+  },
+  {
+    "name": "M-A",
+    "expected": 6.2,
+    "predicted": 7.0,
+    "delta": "Δ=0.8"
+  },
+  {
+    "name": "Hymn",
+    "expected": 7.0,
+    "predicted": 7.0,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "Anguish(8)",
+    "expected": 8.0,
+    "predicted": 8.6,
+    "delta": "Δ=0.6"
+  },
+  {
+    "name": "天空之城(9) x1.05",
+    "expected": 9.0,
+    "predicted": 9.2,
+    "delta": "Δ=0.2"
+  },
+  {
+    "name": "吊灯(10)",
+    "expected": 10.0,
+    "predicted": 11.0,
+    "delta": "Δ=1.0"
+  },
+  {
+    "name": "激光眼",
+    "expected": 11.0,
+    "predicted": 11.0,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "说再见(beta)",
+    "expected": 12.0,
+    "predicted": 12.0,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "幻想物质(fullerene)",
+    "expected": 12.3,
+    "predicted": 12.0,
+    "delta": "Δ=-0.3"
+  },
+  {
+    "name": "萝莉速",
+    "expected": 12.4,
+    "predicted": 11.0,
+    "delta": "Δ=-1.4"
+  },
+  {
+    "name": "幻想物质(luminal)",
+    "expected": 12.4,
+    "predicted": 12.0,
+    "delta": "Δ=-0.4"
+  },
+  {
+    "name": "日本歌(fullerene)",
+    "expected": 12.5,
+    "predicted": 12.0,
+    "delta": "Δ=-0.5"
+  },
+  {
+    "name": "神罚(evening)",
+    "expected": 12.6,
+    "predicted": 12.6,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "We Luv Lama(gamma) x1.2",
+    "expected": 13.0,
+    "predicted": 13.0,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "Cyber Inductance(tachyon) x1.4",
+    "expected": 13.4,
+    "predicted": 13.0,
+    "delta": "Δ=-0.4"
+  },
+  {
+    "name": "女皇切(delta)",
+    "expected": 13.6,
+    "predicted": 13.4,
+    "delta": "Δ=-0.2"
+  },
+  {
+    "name": "日记(delta) x1.3",
+    "expected": 14.0,
+    "predicted": 14.0,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "金字塔 x1.5",
+    "expected": 14.0,
+    "predicted": 14.0,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "灰烬雕像次",
+    "expected": 14.4,
+    "predicted": 14.0,
+    "delta": "Δ=-0.4"
+  },
+  {
+    "name": "Strong 280(11Bit)",
+    "expected": 14.4,
+    "predicted": 14.0,
+    "delta": "Δ=-0.4"
+  },
+  {
+    "name": "Heaven's Fall(e7v3) x1.4",
+    "expected": 14.4,
+    "predicted": 14.4,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "死旋 x1.25",
+    "expected": 14.5,
+    "predicted": 14.6,
+    "delta": "Δ=0.1"
+  },
+  {
+    "name": "灰烬雕像(Rachel)",
+    "expected": 14.6,
+    "predicted": 14.6,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "绯红斗士 x1.15",
+    "expected": 14.6,
+    "predicted": 14.6,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "双子之棺 x1.25",
+    "expected": 15.0,
+    "predicted": 15.0,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "灰烬雕像主",
+    "expected": 15.0,
+    "predicted": 15.0,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "死力(e9v3)",
+    "expected": 15.4,
+    "predicted": 15.4,
+    "delta": "Δ=0.0"
+  },
+  {
+    "name": "如能滚",
+    "expected": 15.7,
+    "predicted": 16.0,
+    "delta": "Δ=0.3"
+  },
+  {
+    "name": "廿",
+    "expected": 16.2,
+    "predicted": 16.0,
+    "delta": "Δ=-0.2"
+  },
+  {
+    "name": "切使尘",
+    "expected": 16.4,
+    "predicted": 16.6,
+    "delta": "Δ=0.2"
+  },
+  {
+    "name": "閃光のフレア x1.25",
+    "expected": 16.0,
+    "predicted": 15.4,
+    "delta": "Δ=-0.6"
+  },
+  {
+    "name": "Collapse of Ego",
+    "expected": 16.8,
+    "predicted": 16.6,
+    "delta": "Δ=-0.2"
+  },
+  {
+    "name": "The Fate of x1.425",
+    "expected": 18.0,
+    "predicted": 18.0,
+    "delta": "Δ=0.0"
+  }
+]
