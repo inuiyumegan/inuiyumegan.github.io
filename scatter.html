@@ -9,11 +9,18 @@
     </style>
 </head>
 <body>
-  <h2>EXPECTED VS PREDICTED</h2>
+  <h2>期望 vs 预测 难度</h2>
   <div id="myplot" style="width:90vw; height:70vh;"></div>
   <script>
-    // 预定义难度组的显示顺序和标签
-    const groups = ["Exact", "Adjacent", "Within", "Miss"];
+    // 按差值自动分组
+    function classifyDelta(exp, pred) {
+      const d = Math.abs(exp - pred);
+      if (d === 0) return 'Exact';
+      if (d <= 1) return 'Adjacent';
+      if (d <= 2) return 'Within';
+      return 'Miss';
+    }
+
     const COLORS = {
       "Exact": "#85C4F9",
       "Adjacent": "#77e89b",
@@ -21,44 +28,54 @@
       "Miss": "#db373c"
     };
 
-    // 定义X轴和Y轴的标签顺序
-    const order = ["α","β","γ","δ","ε","ζ","η"];
-    const orderMap = order.reduce((a,k,i) => (a[k]=i,a), {})
-
     fetch('estdan_scatter.json')
       .then(res=>res.json())
       .then(data => {
-         // 按 group 分组
-         let traces = [];
-         groups.forEach(group=>{
-           let items = data.filter(d=>d.group===group);
-           if(items.length===0) return;
-           traces.push({
-             x: items.map(d=>orderMap[d.expected]),
-             y: items.map(d=>d.predicted),
-             mode:'markers',
-             name: group,
-             text: items.map(d => `${d.name} — Exp: ${d.expected}　Got: ${d.predicted}`),
-             marker: { color: COLORS[group], size:11, line:{color:'#222', width:1}},
-           });
-         });
+        // 添加分组
+        data.forEach(item => {
+          item.group = classifyDelta(item.expected, item.predicted);
+        });
 
-         Plotly.newPlot('myplot', traces, {
-           plot_bgcolor:'#23223b', paper_bgcolor:'#23223b',
-           legend: {font:{color:'#fff'}, bgcolor:'#23223b'},
-           xaxis:{
-             title:'Expected',
-             tickvals: order.map((v,i)=>i),
-             ticktext: order,
-             color:'#fff',
-             gridcolor:'#444'
-           },
-           yaxis:{
-             title:'Predicted',
-             color:'#fff',
-             gridcolor:'#444'
-           }
-         }, {responsive:true});
+        // 按分组分trace
+        const groups = ["Exact", "Adjacent", "Within", "Miss"];
+        const traces = groups.map(group => {
+          const items = data.filter(d => d.group === group);
+          return {
+            x: items.map(d=>d.expected),
+            y: items.map(d=>d.predicted),
+            name: group,
+            mode: "markers",
+            text: items.map(d => `${d.name}<br>期望:${d.expected}　预测:${d.predicted}<br>${d.delta}`),
+            marker: { color: COLORS[group], size:11, line:{color:'#222',width:1}},
+          };
+        });
+
+        // 增加虚线 y=x 作为参考
+        const minX = Math.min(...data.map(d=>d.expected), ...data.map(d=>d.predicted));
+        const maxX = Math.max(...data.map(d=>d.expected), ...data.map(d=>d.predicted));
+        traces.push({
+          x: [minX, maxX],
+          y: [minX, maxX],
+          mode: "lines",
+          line: {dash: 'dash', color: '#bbb', width: 2},
+          hoverinfo: "skip",
+          showlegend: false
+        });
+
+        Plotly.newPlot('myplot', traces, {
+          plot_bgcolor:'#23223b', paper_bgcolor:'#23223b',
+          legend: {font:{color:'#fff'}, bgcolor:'#23223b'},
+          xaxis:{
+            title:'期望',
+            color:'#fff',
+            gridcolor:'#444'
+          },
+          yaxis:{
+            title:'预测',
+            color:'#fff',
+            gridcolor:'#444'
+          }
+        }, {responsive:true});
       })
   </script>
 </body>
