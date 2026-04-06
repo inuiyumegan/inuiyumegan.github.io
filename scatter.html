@@ -80,7 +80,7 @@
         document.getElementById('stats').innerHTML =
           groupNames.map(g=>`<span style="color:${COLORS[g]}">${g}:</span> ${groupStats[g]}`).join('&nbsp;&nbsp;|&nbsp;&nbsp;');
 
-        // 横纵聚集一列所有点，不加 jitter
+        // 不加 jitter
         const traces = groupNames.map(group => {
           const items = data.filter(d => d.group === group);
           return {
@@ -98,10 +98,10 @@
             showlegend: true
           };
         });
-
-        // y=x 虚线
-        const minX = Math.min(...data.map(d=>d.expected), ...data.map(d=>d.predicted), 0);
-        const maxX = Math.max(...data.map(d=>d.expected), ...data.map(d=>d.predicted), 20);
+        const minX = Math.min(...data.map(d=>d.expected));
+        const maxX = Math.max(...data.map(d=>d.expected));
+        const minY = Math.min(...data.map(d=>d.predicted));
+        const maxY = Math.max(...data.map(d=>d.predicted));
         traces.push({
           x: [minX, maxX],
           y: [minX, maxX],
@@ -116,6 +116,7 @@
           legend: {font:{color:'#fff'}, bgcolor:'#23223b', borderwidth:0, bordercolor:'#444'},
           margin:{l:64, r:32, t:44, b:64},
           hovermode: false, // 禁用默认hover浮窗
+          dragmode: false, // 禁止缩放、选框、平移
           xaxis:{
             title:'期望难度',
             tickformat: '.1f',
@@ -123,7 +124,8 @@
             gridcolor:'#333',
             zeroline: false,
             linecolor:'#444',
-            linewidth: 1.5
+            linewidth: 1.5,
+            fixedrange: true // 禁止x轴缩放
           },
           yaxis:{
             title:'预测难度',
@@ -132,39 +134,31 @@
             gridcolor:'#333',
             zeroline: false,
             linecolor:'#444',
-            linewidth: 1.5
+            linewidth: 1.5,
+            fixedrange: true // 禁止y轴缩放
           }
-        }, {responsive:true});
+        }, {responsive:true, staticPlot: true}); // 禁止缩放拖动
 
         // -------自定义tooltip逻辑--------
         const plotDiv = document.getElementById('myplot');
         const tooltip = document.getElementById('custom-tooltip');
-        let timer = null;
-
         plotDiv.onmousemove = function(e) {
-          // 计算鼠标在canvas的逻辑坐标（取 expected 值）
-          // 1. 找到鼠标在坐标轴对应 plotly x 值
           const bounding = plotDiv.getBoundingClientRect();
-          // Plotly margin l
           const plotlyLeft = bounding.left + 64;
           const plotlyRight = bounding.right - 32;
           const plotlyWidth = plotlyRight - plotlyLeft;
           const mouseX = e.clientX;
-          const xaxis = traces[0].x;
           if(mouseX < plotlyLeft || mouseX > plotlyRight) {
             tooltip.classList.remove("show"); tooltip.style.opacity = 0; return;
           }
-          // 2. 用线性映射估算鼠标的expected值（近似方案，不严格,但够用）
           const expMin = minX, expMax = maxX;
-          const expectedValue = expMin + (expMax - expMin) * ((mouseX-plotlyLeft)/plotlyWidth);
-          // 3. 在一定容差范围内收集同列点（±0.13~0.18可自调，越大范围越宽）
-          const THRESH = 0.17;
+          const relX = mouseX - plotlyLeft;
+          const expectedValue = expMin + (expMax - expMin) * (relX/plotlyWidth);
+          const THRESH = 0.17; // 容差
           const selected = data.filter(d => Math.abs(d.expected - expectedValue) < THRESH);
           if(selected.length===0) { tooltip.classList.remove("show"); tooltip.style.opacity = 0; return; }
-
-          // 4. 构造提示内容
           let html = '';
-          selected.sort((a,b)=>b.predicted-a.predicted); // 大在前
+          selected.sort((a,b)=>b.predicted-a.predicted);
           selected.forEach(item => {
             html += `<div class="item">
                 <span class="dot" style="background:${COLORS[item.group]};"></span>
@@ -172,8 +166,6 @@
             </div>`;
           });
           tooltip.innerHTML = html;
-
-          // 5. 定位与动画
           const tipWidth = 360, tipHeight = 24*selected.length+32;
           let left = mouseX - bounding.left + 18;
           let top = e.clientY - bounding.top - 8;
@@ -183,7 +175,6 @@
           tooltip.style.top = top + "px";
           tooltip.classList.add("show");
         };
-
         plotDiv.onmouseleave = function() {
           tooltip.classList.remove("show");
           tooltip.style.opacity = 0;
