@@ -15,11 +15,11 @@
 
 /* === Font Override === */
 body {
-  font-family: 'Inter', sans-serif !important;
+  font-family: 'Inter', sans-serif;
 }
 
 td, th {
-  font-family: 'JetBrains Mono', monospace !important;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 td {
@@ -82,7 +82,7 @@ th { color:#626880; }
 <body>
 <div class="container">
 
-<h1>Benchmark Report (Dynamic)</h1>
+<h1>Benchmark Report</h1>
 
 <div class="chart-box">
   <canvas id="scatter"></canvas>
@@ -114,8 +114,8 @@ function getDeltaValue(deltaStr){
 
 function getFlag(delta){
   const d = Math.abs(delta);
-  if (d <= 0.165) return 'exact';
-  if (d <= 0.495) return 'adjacent';
+  if (d <= 0.2) return 'exact';
+  if (d <= 0.4) return 'adjacent';
   if (d <= 1.0) return 'within';
   return 'miss';
 }
@@ -157,27 +157,39 @@ function renderChart(data){
     data: {
       datasets: [
         {
-          label: 'Maps',
+          label: 'Exact',
           data: data,
           pointBackgroundColor: d => d.raw.backgroundColor,
           pointRadius: 5
         },
-
-        // ✅ 参考线
+        
+    data: {
+      datasets: [
         {
-          label: 'y = x',
-          data: [
-            { x: 0, y: 0 },
-            { x: 18, y: 18 }
-          ],
-          type: 'line',
-          borderColor: 'rgba(255,255,255,0.4)',
-          borderDash: [6,6],
-          pointRadius: 0
-        }
-      ]
-    },
-
+          label: 'Ajacent',
+          data: data,
+          pointBackgroundColor: d => d.raw.backgroundColor,
+          pointRadius: 5
+        },
+        
+            data: {
+      datasets: [
+        {
+          label: 'Within',
+          data: data,
+          pointBackgroundColor: d => d.raw.backgroundColor,
+          pointRadius: 5
+        },
+        
+            data: {
+      datasets: [
+        {
+          label: 'Miss',
+          data: data,
+          pointBackgroundColor: d => d.raw.backgroundColor,
+          pointRadius: 5
+        },
+        
     options: {
       responsive:true,
       plugins:{
