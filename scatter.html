@@ -153,12 +153,35 @@ function renderChart(data){
 
   new Chart(ctx, {
     type: 'scatter',
-    data: {
-      datasets: [{
-        data: data,
-        pointRadius: 5
-      }]
-    },
+
+{
+  label: 'y = x',
+  data: [
+    { x: 0, y: 0 },
+    { x: 18, y: 18 }
+  ],
+  type: 'line',
+  borderColor: '#ffffff',
+  borderWidth: 1,
+  pointRadius: 0,
+  fill: false,
+  tension: 0
+}
+
+scales: {
+  x: {
+    min: 0,
+    max: 18
+  },
+  y: {
+    min: 0,
+    max: 18
+  }
+}
+
+  borderDash: [5, 5], 
+borderColor: 'rgba(255,255,255,0.5)'
+            
     options: {
       responsive:true,
       plugins:{
