@@ -154,20 +154,30 @@ function renderChart(data){
   new Chart(ctx, {
     type: 'scatter',
 
-{
-  label: 'y = x',
-  data: [
-    { x: 0, y: 0 },
-    { x: 18, y: 18 }
-  ],
-  type: 'line',
-  borderColor: '#ffffff',
-  borderWidth: 1,
-  pointRadius: 0,
-  fill: false,
-  tension: 0
-}
-            
+    data: {
+      datasets: [
+        {
+          label: 'Maps',
+          data: data,
+          pointBackgroundColor: d => d.raw.backgroundColor,
+          pointRadius: 5
+        },
+
+        // ✅ 参考线
+        {
+          label: 'y = x',
+          data: [
+            { x: 0, y: 0 },
+            { x: 18, y: 18 }
+          ],
+          type: 'line',
+          borderColor: 'rgba(255,255,255,0.4)',
+          borderDash: [6,6],
+          pointRadius: 0
+        }
+      ]
+    },
+
     options: {
       responsive:true,
       plugins:{
@@ -194,30 +204,19 @@ function renderChart(data){
             tooltip.style.left = context.tooltip.caretX + 'px';
             tooltip.style.top = context.tooltip.caretY + 'px';
           }
+        },
+        legend:{
+          labels:{ color:'#ccc' }
         }
       },
       scales:{
-        x:{ title:{display:true,text:'Expected'} },
-        y:{ title:{display:true,text:'Predicted'} }
+        x:{ min:0, max:18, title:{display:true,text:'Expected'} },
+        y:{ min:0, max:18, title:{display:true,text:'Predicted'} }
       }
-    },
-    plugins:[{
-      id:'diagonal',
-      afterDraw(chart){
-        const {ctx, scales:{x,y}} = chart;
-
-        ctx.save();
-        ctx.beginPath();
-        ctx.moveTo(x.left, y.bottom);
-        ctx.lineTo(x.right, y.top);
-        ctx.strokeStyle = '#888';
-        ctx.stroke();
-        ctx.restore();
-      }
-    }]
+    }
   });
 }
-
+  
 function renderTable(data){
   const tbody = document.getElementById('table-body');
 
