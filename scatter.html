@@ -3,183 +3,265 @@
 <head>
   <meta charset="utf-8"/>
   <title>Dan Est.</title>
+
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
   <style>
-      body { background: #181824; color: #fff; font-family: 'Segoe UI', '微软雅黑', Arial, sans-serif; }
-      h2 { color: #95c8ff; margin-left: 10vw; }
-      #myplot { box-shadow: 0 4px 16px #0006; border-radius: 14px; }
-      #stats { margin-left: 10vw; margin-bottom: 16px; }
-      /* 自定义悬浮窗样式/动画 */
-      #custom-tooltip {
-        display: none;
-        opacity: 0;
-        position: absolute;
-        left: 0; top: 0; z-index: 10;
-        min-width: 340px;
-        font-size: 1.07em;
-        pointer-events: none;
-        background: rgba(25,25,32, 0.98);
-        color: #fff;
-        padding: 12px 16px 10px 13px;
-        border-radius: 10px;
-        box-shadow: 0 4px 24px #000c, 0 1.5px 0px #3338;
-        border: 2px solid #222;
-        /* 动画：渐入渐出 */
-        transition: opacity 0.22s cubic-bezier(.35,1.6,.2,1.01);
-      }
-      #custom-tooltip.show {
-        display: block;
-        opacity: 1;
-      }
-      #custom-tooltip .item {
-        display: flex; align-items: center;
-        margin-bottom: 2px; line-height:1.4;
-        font-family: 'Consolas','Menlo','微软雅黑',monospace;
-      }
-      #custom-tooltip .dot {
-        display:inline-block; width:16px; height:15px; margin-right:8px;
-        border-radius:4px; background: #8aceff;
-        flex-shrink:0;
-      }
-      #custom-tooltip .item:last-child { margin-bottom: 0; }
+    body {
+      background: #181824;
+      color: #fff;
+      font-family: 'Segoe UI', '微软雅黑', Arial;
+    }
+
+    h2 {
+      margin-left: 5vw;
+      color: #8aceff;
+    }
+
+    #myplot {
+      width: 90vw;
+      height: 70vh;
+      margin: auto;
+      border-radius: 14px;
+      box-shadow: 0 4px 16px #0006;
+      position: relative;
+    }
+
+    #stats {
+      margin-left: 5vw;
+      margin-bottom: 10px;
+    }
+
+    /* 🔥 高级 tooltip */
+    #tooltip {
+      position: absolute;
+      pointer-events: none;
+      min-width: 220px;
+      padding: 10px 14px;
+
+      background: rgba(20,20,30,0.85);
+      backdrop-filter: blur(10px);
+
+      border: 1px solid #3a3a55;
+      border-radius: 10px;
+
+      box-shadow: 0 8px 32px #000a;
+
+      opacity: 0;
+      transform: translateY(6px);
+      transition: all 0.12s ease;
+
+      font-size: 14px;
+      z-index: 10;
+    }
+
+    #tooltip.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      margin-right: 6px;
+    }
   </style>
 </head>
+
 <body>
-  <h2>Dan est</h2>
-  <div id="stats"></div>
-  <div id="myplot" style="width:90vw; height:70vh; margin:auto; position:relative;"></div>
-  <div id="custom-tooltip"></div>
-  <script>
-    function classifyDelta(exp, pred) {
-      const d = Math.abs(exp - pred);
-      if (d === 0) return 'Exact';
-      if (d <= 1) return 'Adjacent';
-      if (d <= 2) return 'Within';
-      return 'Miss';
+
+<h2>Dan Est Scatter</h2>
+<div id="stats"></div>
+
+<div id="myplot"></div>
+<div id="tooltip"></div>
+
+<script>
+const COLORS = {
+  Exact: "#8aceff",
+  Adjacent: "#77e89b",
+  Within: "#ffae54",
+  Miss: "#ec5659"
+};
+
+function classifyDelta(exp, pred) {
+  const d = Math.abs(exp - pred);
+  if (d === 0) return 'Exact';
+  if (d <= 1) return 'Adjacent';
+  if (d <= 2) return 'Within';
+  return 'Miss';
+}
+
+function escapeHTML(str) {
+  return str.replace(/[&<>"']/g, m => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",
+    "\"":"&quot;","'":"&#39;"
+  })[m]);
+}
+
+fetch('estdan_scatter.json')
+.then(r => r.json())
+.then(data => {
+
+  // ===== 数据预处理 =====
+  let minX = Infinity, maxX = -Infinity;
+  let minY = Infinity, maxY = -Infinity;
+
+  const groups = {
+    Exact: [], Adjacent: [], Within: [], Miss: []
+  };
+
+  data.forEach(d => {
+    d.group = classifyDelta(d.expected, d.predicted);
+    groups[d.group].push(d);
+
+    if (d.expected < minX) minX = d.expected;
+    if (d.expected > maxX) maxX = d.expected;
+    if (d.predicted < minY) minY = d.predicted;
+    if (d.predicted > maxY) maxY = d.predicted;
+  });
+
+  // ===== stats =====
+  document.getElementById('stats').innerHTML =
+    Object.keys(groups).map(g =>
+      `<span style="color:${COLORS[g]}">${g}:</span> ${groups[g].length}`
+    ).join(" | ");
+
+  // ===== traces =====
+  const traces = Object.keys(groups).map(g => ({
+    x: groups[g].map(d=>d.expected),
+    y: groups[g].map(d=>d.predicted),
+    mode: "markers",
+    name: g,
+    marker: {
+      size: 10,
+      color: COLORS[g],
+      opacity: 0.85
+    },
+    hoverinfo: "skip"
+  }));
+
+  traces.push({
+    x: [minX, maxX],
+    y: [minX, maxX],
+    mode: "lines",
+    line: { dash: "dash", color: "#aaa" },
+    hoverinfo: "skip",
+    name: "参考线"
+  });
+
+  Plotly.newPlot('myplot', traces, {
+    plot_bgcolor:"#23223b",
+    paper_bgcolor:"#23223b",
+    hovermode:false,
+    xaxis:{ title:"Expected", fixedrange:true },
+    yaxis:{ title:"Predicted", fixedrange:true }
+  }, {
+    staticPlot:true,
+    responsive:true
+  });
+
+  initTooltip(data, minX, maxX, minY, maxY);
+});
+
+
+// ===== 🔥 核心：最近点 tooltip =====
+function initTooltip(data, minX, maxX, minY, maxY) {
+
+  const plot = document.getElementById('myplot');
+  const tooltip = document.getElementById('tooltip');
+
+  let lastPoint = null;
+  let highlightIndex = null;
+
+  function findNearest(mx, my, rect) {
+    let best = null;
+    let minDist = Infinity;
+
+    for (const d of data) {
+
+      const x = (d.expected - minX)/(maxX-minX)*rect.width;
+      const y = rect.height - (d.predicted - minY)/(maxY-minY)*rect.height;
+
+      const dx = x - mx;
+      const dy = y - my;
+      const dist = dx*dx + dy*dy;
+
+      if (dist < minDist) {
+        minDist = dist;
+        best = d;
+      }
     }
-    const COLORS = {
-      "Exact": "#8aceff",
-      "Adjacent": "#77e89b",
-      "Within": "#ffae54",
-      "Miss": "#ec5659"
-    };
-    const MARKER_SIZE = 12;
-    const groupNames = ["Exact", "Adjacent", "Within", "Miss"];
 
-    fetch('estdan_scatter.json')
-      .then(res=>res.json())
-      .then(data => {
-        data.forEach(item => {
-          item.group = classifyDelta(item.expected, item.predicted);
-        });
+    return minDist < 500 ? best : null;
+  }
 
-        // 统计计数
-        const groupStats = {};
-        groupNames.forEach(g=>groupStats[g]=0);
-        data.forEach(d=>groupStats[d.group]++);
-        document.getElementById('stats').innerHTML =
-          groupNames.map(g=>`<span style="color:${COLORS[g]}">${g}:</span> ${groupStats[g]}`).join('&nbsp;&nbsp;|&nbsp;&nbsp;');
+  plot.addEventListener("mousemove", e => {
+    const rect = plot.getBoundingClientRect();
 
-        // 不加 jitter
-        const traces = groupNames.map(group => {
-          const items = data.filter(d => d.group === group);
-          return {
-            x: items.map(d=>d.expected),
-            y: items.map(d=>d.predicted),
-            name: group,
-            mode: "markers",
-            marker: {
-              color: COLORS[group],
-              size: MARKER_SIZE,
-              line: {color:'#14141f', width:1},
-              opacity: 0.85
-            },
-            hoverinfo: "none",      // 禁用原生浮窗
-            showlegend: true
-          };
-        });
-        const minX = Math.min(...data.map(d=>d.expected));
-        const maxX = Math.max(...data.map(d=>d.expected));
-        const minY = Math.min(...data.map(d=>d.predicted));
-        const maxY = Math.max(...data.map(d=>d.predicted));
-        traces.push({
-          x: [minX, maxX],
-          y: [minX, maxX],
-          mode: "lines",
-          line: {dash: 'dash', color: '#bbb', width: 2},
-          hoverinfo: "skip",
-          name: '参考虚线'
-        });
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
 
-        Plotly.newPlot('myplot', traces, {
-          plot_bgcolor:'#23223b', paper_bgcolor:'#23223b',
-          legend: {font:{color:'#fff'}, bgcolor:'#23223b', borderwidth:0, bordercolor:'#444'},
-          margin:{l:64, r:32, t:44, b:64},
-          hovermode: false, // 禁用默认hover浮窗
-          dragmode: false, // 禁止缩放、选框、平移
-          xaxis:{
-            title:'期望难度',
-            tickformat: '.1f',
-            color:'#d6f0ff',
-            gridcolor:'#333',
-            zeroline: false,
-            linecolor:'#444',
-            linewidth: 1.5,
-            fixedrange: true // 禁止x轴缩放
-          },
-          yaxis:{
-            title:'预测难度',
-            tickformat: '.1f',
-            color:'#d6f0ff',
-            gridcolor:'#333',
-            zeroline: false,
-            linecolor:'#444',
-            linewidth: 1.5,
-            fixedrange: true // 禁止y轴缩放
-          }
-        }, {responsive:true, staticPlot: true}); // 禁止缩放拖动
+    const point = findNearest(mx, my, rect);
 
-        // -------自定义tooltip逻辑--------
-        const plotDiv = document.getElementById('myplot');
-        const tooltip = document.getElementById('custom-tooltip');
-        plotDiv.onmousemove = function(e) {
-          const bounding = plotDiv.getBoundingClientRect();
-          const plotlyLeft = bounding.left + 64;
-          const plotlyRight = bounding.right - 32;
-          const plotlyWidth = plotlyRight - plotlyLeft;
-          const mouseX = e.clientX;
-          if(mouseX < plotlyLeft || mouseX > plotlyRight) {
-            tooltip.classList.remove("show"); tooltip.style.opacity = 0; return;
-          }
-          const expMin = minX, expMax = maxX;
-          const relX = mouseX - plotlyLeft;
-          const expectedValue = expMin + (expMax - expMin) * (relX/plotlyWidth);
-          const THRESH = 0.17; // 容差
-          const selected = data.filter(d => Math.abs(d.expected - expectedValue) < THRESH);
-          if(selected.length===0) { tooltip.classList.remove("show"); tooltip.style.opacity = 0; return; }
-          let html = '';
-          selected.sort((a,b)=>b.predicted-a.predicted);
-          selected.forEach(item => {
-            html += `<div class="item">
-                <span class="dot" style="background:${COLORS[item.group]};"></span>
-                ${item.name.replace(/</g,"&lt;")} — Exp: ${item.expected} &nbsp; Got: ${item.predicted}
-            </div>`;
-          });
-          tooltip.innerHTML = html;
-          const tipWidth = 360, tipHeight = 24*selected.length+32;
-          let left = mouseX - bounding.left + 18;
-          let top = e.clientY - bounding.top - 8;
-          if(left+tipWidth+30 > bounding.width) left = bounding.width - tipWidth - 30;
-          if(top+tipHeight+20 > bounding.height) top = bounding.height - tipHeight - 20;
-          tooltip.style.left = left + "px";
-          tooltip.style.top = top + "px";
-          tooltip.classList.add("show");
-        };
-        plotDiv.onmouseleave = function() {
-          tooltip.classList.remove("show");
-          tooltip.style.opacity = 0;
-        };
-      });
-  </script>
+    if (!point) {
+      tooltip.classList.remove("show");
+      lastPoint = null;
+      return;
+    }
+
+    if (point === lastPoint) return;
+    lastPoint = point;
+
+    // ===== tooltip =====
+    tooltip.innerHTML = `
+      <div class="row">
+        <div class="dot" style="background:${COLORS[point.group]}"></div>
+        <b>${escapeHTML(point.name)}</b>
+      </div>
+      <div>Exp: ${point.expected}</div>
+      <div>Got: ${point.predicted}</div>
+      <div>Type: ${point.group}</div>
+    `;
+
+    tooltip.style.left = (mx + 15) + "px";
+    tooltip.style.top = (my + 15) + "px";
+    tooltip.classList.add("show");
+
+    highlight(point);
+  });
+
+  plot.addEventListener("mouseleave", () => {
+    tooltip.classList.remove("show");
+  });
+
+  function highlight(point) {
+    if (highlightIndex !== null) {
+      Plotly.deleteTraces('myplot', highlightIndex);
+    }
+
+    Plotly.addTraces('myplot', {
+      x: [point.expected],
+      y: [point.predicted],
+      mode: "markers",
+      marker: {
+        size: 18,
+        color: "#fff",
+        line: { width: 3, color: COLORS[point.group] }
+      },
+      hoverinfo: "skip",
+      showlegend: false
+    }).then(i => highlightIndex = i);
+  }
+}
+</script>
+
 </body>
 </html>
