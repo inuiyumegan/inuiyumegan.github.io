@@ -155,14 +155,27 @@ function renderChart(data){
     type: 'scatter',
 
     data: {
-      datasets: [
-        {
-          label: 'Exact',
-          data: data,
-          pointBackgroundColor: d => d.raw.backgroundColor,
-          pointRadius: 5
-        },
-        
+        datasets: [
+  {
+    label: 'Maps',
+    data: data,
+    pointBackgroundColor: d => d.raw.backgroundColor,
+    pointRadius: 5
+  },
+
+  {
+    label: 'y = x',
+    data: [
+      { x: 0, y: 0 },
+      { x: 18, y: 18 }
+    ],
+    type: 'line',
+    borderColor: 'rgba(255,255,255,0.4)',
+    borderDash: [6,6],
+    pointRadius: 0
+  }
+]
+          
     options: {
       responsive:true,
       plugins:{
