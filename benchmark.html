@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Osu!mani Map Analyser Benchmark Report</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" type="text/css" href="./css/chartcontainer.css">
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+</head>
+<body>
+  <h2>Osu!mania Map Analyser Benchmark Report</h2>
+
+  <div class="stattop">
+    <div class="data-container">
+      <h4>总谱面数</h4>
+      <p id="csv1-c26"></p>
+      <h5>含4大键型的谱面</h5>
+    </div>
+
+    <div class="data-container">
+      <h4>准确预测占比</h4>
+      <p id="csv1-d22"></p>
+      <h5>误差≤1/3段</h5>
+    </div>
+
+    <div class="data-container">
+      <h4>误差最大值</h4>
+      <p id="csv2-g16"></p>
+    </div>
+
+    <div class="data-container">
+      <h4>误差最小值</h4>
+      <p id="csv2-g19"></p>
+    </div>
+  </div>
+  <div class="stattop">
+    <div class="data-container">
+      <h4>标准差</h4>
+      <p id="csv2-g4"></p>
+      <h5>误差与平均误差之间的平均差异</h5>
+    </div>
+
+    <div class="data-container">
+      <h4>中位数绝对误差</h4>
+      <p id="csv2-g7"></p>
+      <h5>误差与误差中位数之间的偏差绝对值的中位数</h5>
+    </div>
+
+    <div class="data-container">
+      <h4>平均带符号误差</h4>
+      <p id="csv2-g10"></p>
+      <h5>误差的平均值</h5>
+    </div>
+
+    <div class="data-container">
+      <h4>平均绝对误差</h4>
+      <p id="csv2-g13"></p>
+    <h5>绝对误差的平均值</h5>
+    </div>
+  </div>
+
+  <script>
+    window.addEventListener("csvLoaded1", () => {
+      const el = document.getElementById("csv1-c1");
+        if (el) el.textContent = getCell1("C1");
+      document.getElementById("csv1-c2").textContent = getCell1("C2");
+      document.getElementById("csv1-c3").textContent = getCell1("C3");
+      document.getElementById("csv1-c4").textContent = getCell1("C4");
+      document.getElementById("csv1-c5").textContent = getCell1("C5");
+      // document.getElementById("csv1-c6").textContent = getCell1("C6");
+      document.getElementById("csv1-c7").textContent = getCell1("C7");
+      document.getElementById("csv1-c8").textContent = getCell1("C8");
+      document.getElementById("csv1-c9").textContent = getCell1("C9");
+      document.getElementById("csv1-c10").textContent = getCell1("C10");
+      // document.getElementById("csv1-c11").textContent = getCell1("C11");
+      document.getElementById("csv1-c12").textContent = getCell1("C12");
+      document.getElementById("csv1-c13").textContent = getCell1("C13");
+      document.getElementById("csv1-c14").textContent = getCell1("C14");
+      document.getElementById("csv1-c15").textContent = getCell1("C15");
+      // document.getElementById("csv1-c16").textContent = getCell1("C16");
+      document.getElementById("csv1-c17").textContent = getCell1("C17");
+      document.getElementById("csv1-c18").textContent = getCell1("C18");
+      document.getElementById("csv1-c19").textContent = getCell1("C19");
+      document.getElementById("csv1-c20").textContent = getCell1("C20");
+      // document.getElementById("csv1-c21").textContent = getCell1("C21");
+      document.getElementById("csv1-c22").textContent = getCell1("C22");
+      document.getElementById("csv1-c23").textContent = getCell1("C23");
+      document.getElementById("csv1-c24").textContent = getCell1("C24");
+      document.getElementById("csv1-c25").textContent = getCell1("C25");
+      document.getElementById("csv1-c26").textContent = getCell1("C26");
+      document.getElementById("csv1-d22").textContent = getCell1("D22");
+    });
+
+    window.addEventListener("csvLoaded2", () => {
+      document.getElementById("csv2-g4").textContent = getCell2("G4");
+      document.getElementById("csv2-g7").textContent = getCell2("G7");
+      document.getElementById("csv2-g10").textContent = getCell2("G10");
+      document.getElementById("csv2-g13").textContent = getCell2("G13");
+      document.getElementById("csv2-g16").textContent = getCell2("G16");
+      document.getElementById("csv2-g19").textContent = getCell2("G19");
+    });
+  </script>
+
+  <div class="mainchart-container">
+    <h3 class="estdiff">所有谱面</h3>
+    <canvas id="mainestdiff"></canvas>
+  </div>
+
+  <div class="pattern">
+    <div class="patternchart-container">
+      <h3 class="estdiff">叠键谱面</h3>
+      <canvas id="jackestdiff"></canvas>
+    </div>
+
+    <div class="patternchart-container">
+      <h3 class="estdiff">技巧谱面</h3>
+      <canvas id="techestdiff"></canvas>
+    </div>
+  </div>
+
+  <div class="pattern">
+    <div class="patternchart-container">
+      <h3 class="estdiff">乱键谱面</h3>
+      <canvas id="speedestdiff"></canvas>
+    </div>
+
+    <div class="patternchart-container">
+      <h3 class="estdiff">切换谱面</h3>
+      <canvas id="staminaestdiff"></canvas>
+    </div>
+  </div>
+
+  <div class="chart-wrapper">
+    <div class="item small" style="grid-area: a;">
+      <h2>叠键</h2>
+      <canvas id="jackbreakdown"></canvas>
+      <div id="csv1-c2" style="display: none;"></div>
+      <div id="csv1-c3" style="display: none;"></div>
+      <div id="csv1-c4" style="display: none;"></div>
+      <div id="csv1-c5" style="display: none;"></div>
+    </div>
+
+    <div class="item small" style="grid-area: b;">
+      <h2>技巧</h2>
+      <canvas id="techbreakdown"></canvas>
+      <div id="csv1-c7" style="display: none;"></div>
+      <div id="csv1-c8" style="display: none;"></div>
+      <div id="csv1-c9" style="display: none;"></div>
+      <div id="csv1-c10" style="display: none;"></div>
+    </div>
+
+    <div class="item small" style="grid-area: c;">
+      <h2>乱键</h2>
+      <canvas id="speedbreakdown"></canvas>
+      <div id="csv1-c12" style="display: none;"></div>
+      <div id="csv1-c13" style="display: none;"></div>
+      <div id="csv1-c14" style="display: none;"></div>
+      <div id="csv1-c15" style="display: none;"></div>
+    </div>
+
+    <div class="item small" style="grid-area: d;">
+      <h2>切换</h2>
+      <canvas id="staminabreakdown"></canvas>
+      <div id="csv1-c17" style="display: none;"></div>
+      <div id="csv1-c18" style="display: none;"></div>
+      <div id="csv1-c19" style="display: none;"></div>
+      <div id="csv1-c20" style="display: none;"></div>
+    </div>
+
+    <div class="item big" style="grid-area: big;">
+      <h2>难度预测精准度占比</h2>
+      <canvas id="mainbreakdown"></canvas>
+      <div id="csv1-c22" style="display: none;"></div>
+      <div id="csv1-c23" style="display: none;"></div>
+      <div id="csv1-c24" style="display: none;"></div>
+      <div id="csv1-c25" style="display: none;"></div>
+    </div>
+  </div>
+  
+  <script src="./js/stat.js"></script>
+  <script src="./js/stat2.js"></script>
+  <script src="./js/allpattern.js" class="allpattern"></script>
+  <script src="/js/mainbreakdown.js"></script>
+  <script src="/js/jackbreakdown.js"></script>
+  <script src="/js/techbreakdown.js"></script>
+  <script src="/js/speedbreakdown.js"></script>
+  <script src="/js/staminabreakdown.js"></script>
+  <script src="./js/jack.js" class="jack"></script>
+  <script src="./js/tech.js" class="tech"></script>
+  <script src="./js/speed.js" class="speed"></script>
+  <script src="./js/stamina.js" class="stamina"></script>
+</body>
+</html>
